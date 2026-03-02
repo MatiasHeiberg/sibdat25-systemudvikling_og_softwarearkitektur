@@ -1,0 +1,62 @@
+/* 1. Fælles design til alle fil-knapperne */
+.internal-link[data-href$=".bat"],
+.internal-link[data-href$=".slnx"],
+.internal-link[data-href$=".code-workspace"],
+.internal-link[data-href="README.md"] {
+  /* Obsidian UI variabler for at matche dit tema */
+  background-color: var(--interactive-normal);
+  color: var(--text-normal) !important;
+  border: 1px solid var(--background-modifier-border);
+  border-radius: var(--button-radius);
+  padding: 2px 12px;
+  
+  /* Knap-normalisering (Ensartet bredde) */
+  display: inline-block;          /* Gør det muligt at styre bredden på et link */
+  min-width: 110px;               /* Sætter en fast minimumsbredde for alle knapper */
+  text-align: center;             /* Sørger for at kortere tekst står pænt i midten */
+  
+  /* Tekst & Visuelt */
+  text-decoration: none !important;
+  font-weight: 500 !important;
+  cursor: var(--cursor-link);
+  transition: all 0.15s ease;
+  
+  /* TRICKET: Skjul den originale tekst med endelsen */
+  font-size: 0 !important; 
+}
+
+/* Hover-effekt for knapperne */
+.internal-link[data-href$=".bat"]:hover,
+.internal-link[data-href$=".slnx"]:hover,
+.internal-link[data-href$=".code-workspace"]:hover,
+.internal-link[data-href="README.md"]:hover {
+  background-color: var(--interactive-hover);
+  border-color: var(--interactive-accent);
+}
+
+/* 2. Indsæt den nye, rene tekst manuelt for hver fil */
+
+.internal-link[data-href="Build-Report.bat"]::before {
+  content: "Export Draft";
+  font-size: var(--font-ui-small); 
+}
+
+.internal-link[data-href="Setup-Script.bat"]::before {
+  content: "Setup Repo"; 
+  font-size: var(--font-ui-small);
+}
+
+.internal-link[data-href="Solution.slnx"]::before {
+  content: "Start Solution";
+  font-size: var(--font-ui-small);
+}
+
+.internal-link[data-href="Write-Report.code-workspace"]::before {
+  content: "Edit Report";
+  font-size: var(--font-ui-small);
+}
+
+.internal-link[data-href="README.md"]::before {
+  content: "README";
+  font-size: var(--font-ui-small);
+}

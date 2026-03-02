@@ -1,0 +1,27 @@
+# --- C# & Visual Studio ---
+.vs/
+bin/
+obj/
+*.user
+*.suo
+
+# --- VS Code ---
+.vscode/*
+!.vscode/settings.json
+!.vscode/extensions.json
+!.vscode/launch.json
+
+# --- Obsidian (Whitelist Strategy) ---
+.obsidian/*
+!.obsidian/community-plugins.json
+!.obsidian/plugins/
+!.obsidian/snippets/
+!.obsidian/app.json
+!.obsidian/hotkeys.json
+!.obsidian/appearance.json
+!.obsidian/core-plugins.json
+!.obsidian/workspaces.json                
+
+# --- OS Junk ---
+.DS_Store
+Thumbs.db

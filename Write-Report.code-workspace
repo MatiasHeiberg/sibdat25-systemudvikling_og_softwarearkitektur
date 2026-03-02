@@ -1,0 +1,14 @@
+{
+	"folders": [
+		{
+			"path": "."
+		}
+	],
+	"settings": {
+		"tinymist.exportPdf": "onSave",
+		"tinymist.outputPath": "$root/$dir/report.pdf",
+		"tinymist.fontPaths": [
+			"./report/fonts"
+		]
+	}
+}

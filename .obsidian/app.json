@@ -1,0 +1,19 @@
+{
+  "livePreview": false,
+  "propertiesInDocument": "visible",
+  "showLineNumber": true,
+  "openBehavior": "file:3 README",
+  "newFileLocation": "folder",
+  "newFileFolderPath": "docs/notes",
+  "attachmentFolderPath": "docs/attachments",
+  "alwaysUpdateLinks": true,
+  "showUnsupportedFiles": true,
+  "trashOption": "local",
+  "userIgnoreFilters": [
+    "report/fonts/",
+    "/(^|\\/)bin\\//",
+    "/(^|\\/)obj\\//",
+    "/(^|\\/)TestResults\\//",
+    "build.ps1"
+  ]
+}

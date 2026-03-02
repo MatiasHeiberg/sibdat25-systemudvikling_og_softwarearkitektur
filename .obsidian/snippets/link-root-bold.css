@@ -1,0 +1,9 @@
+/* Gør links fede ud fra deres filnavn/endelse i data-href */
+span.internal-link[data-href$=".bat"],
+span.internal-link[data-href$=".ps1"],
+span.internal-link[data-href$=".code-workspace"],
+span.internal-link[data-href$=".slnx"],
+span.internal-link[data-href="README.md"],
+span.internal-link[data-href="README"] {
+  font-weight: bold !important;
+}

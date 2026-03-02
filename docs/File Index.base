@@ -1,0 +1,48 @@
+views:
+  - type: list
+    name: All Files
+    groupBy:
+      property: file.folder
+      direction: ASC
+    order:
+      - file.name
+    markers: number
+    indentProperties: false
+    columnSize:
+      file.name: 302
+  - type: table
+    name: Report Outline
+    filters:
+      and:
+        - file.inFolder("docs/notes")
+        - exclude != true
+    groupBy:
+      property: section
+      direction: ASC
+    order:
+      - file.name
+      - sortKey
+      - section
+    sort:
+      - property: file.name
+        direction: DESC
+      - property: sortKey
+        direction: ASC
+    summaries: {}
+    columnSize:
+      file.name: 107
+  - type: table
+    name: Daily Log
+    filters:
+      and:
+        - file.inFolder("docs/notes")
+    groupBy:
+      property: created
+      direction: DESC
+    order:
+      - file.name
+    sort:
+      - property: file.ctime
+        direction: ASC
+    columnSize:
+      file.name: 282

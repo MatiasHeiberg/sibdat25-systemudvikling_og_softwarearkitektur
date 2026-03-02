@@ -1,0 +1,19 @@
+/* links-base.css */
+
+/* 1. Interne links: Ingen understregning, normal tykkelse */
+.internal-link,
+.cm-hmd-internal-link {
+  text-decoration: none !important;
+  font-weight: normal !important;
+}
+
+/* 2. Eksterne weblinks: Altid understregning */
+.external-link {
+  text-decoration: underline !important;
+}
+
+/* 3. Hover-effekt på interne links */
+.internal-link:hover,
+.cm-hmd-internal-link:hover {
+  text-decoration: underline !important;
+}

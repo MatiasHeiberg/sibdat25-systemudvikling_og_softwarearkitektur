@@ -1,0 +1,9 @@
+/* Gør alt med klassen "is-excluded" gråt og gennemsigtigt */
+.is-excluded,
+.is-excluded .nav-file-title-content,
+.is-excluded .tree-item-inner,
+.workspace-tab-header.is-excluded .workspace-tab-header-inner-title {
+    color: var(--text-muted) !important;
+    opacity: 0.5 !important;
+    font-style: italic !important;
+}

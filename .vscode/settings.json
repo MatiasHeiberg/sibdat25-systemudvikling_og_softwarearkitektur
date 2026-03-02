@@ -1,0 +1,35 @@
+{
+  "tinymist.exportPdf": "onSave",
+ "tinymist.outputPath": "$root/report/output/$name.pdf",
+  "tinymist.fontPaths": ["./report/fonts"],
+  "[typst]": {
+    "editor.formatOnSave": true,
+    "editor.wordWrap": "on"
+  },
+  "files.exclude": {
+    // VS Code & Workspace filer
+    ".vscode": true,
+    "Write-Report.code-workspace": true,
+    "Setup-Script.bat": true,
+    "Build-Report.bat": true,
+    
+    // Typst / Rapport baggrundsfiler
+    "report/fonts": true,
+    
+    // Obsidian konfiguration og skraldespand
+    ".obsidian": true,
+    ".trash": true,
+    ".obsidianignore": true,
+    
+    // C# Programmeringsfiler
+    ".vs": true,
+    "src": true,
+    "tests": true,
+    "Solution.slnx": true,
+    
+    // Scripts, Git og Info filer (Nu inklusiv Build og Readme)
+    "build.ps1": true,
+    "README.md": true,
+    ".gitignore": true
+  }
+}
