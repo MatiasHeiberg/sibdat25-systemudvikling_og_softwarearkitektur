@@ -15,5 +15,6 @@
     "/(^|\\/)obj\\//",
     "/(^|\\/)TestResults\\//",
     "build.ps1"
-  ]
+  ],
+  "promptDelete": false
 }
