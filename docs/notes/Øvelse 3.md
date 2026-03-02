@@ -4,11 +4,11 @@ section: dag 2
 exclude: false
 sortKey: 0.47259
 ---
-	- Hvilke risici kan opstå i forbindelse med tidsplanen og leverancerne i et softwareudviklingsprojekt?
-	- Hvordan kan ændringer i kravspecifikationer påvirke projektets fremdrift og kvalitet?
-	- Hvilke tekniske risici kan opstå under udviklingen af jeres software, og hvordan kan de håndteres?
-	- Hvordan kan teamets dynamik og kommunikation påvirke projektets succes?
-	- Hvordan kan timeboxing hjælpe med at håndtere risici i udviklingsprojektet?
+	1. Hvilke risici kan opstå i forbindelse med tidsplanen og leverancerne i et softwareudviklingsprojekt?
+	2. Hvordan kan ændringer i kravspecifikationer påvirke projektets fremdrift og kvalitet?
+	3. Hvilke tekniske risici kan opstå under udviklingen af jeres software, og hvordan kan de håndteres?
+	4. Hvordan kan teamets dynamik og kommunikation påvirke projektets succes?
+	5. Hvordan kan timeboxing hjælpe med at håndtere risici i udviklingsprojektet?
 
 
 > [!NOTE]- Underviserens bemærkninger
@@ -18,4 +18,7 @@ sortKey: 0.47259
 > - Teamdynamik: Reflekter over hvordan samarbejde og kommunikation i teamet kan påvirke projektets fremdrift. Hvordan kan man fremme en positiv og produktiv arbejdsatmosfære?
 > - Timeboxing: Overvej hvordan fastsatte tidsrammer for hver iteration kan hjælpe med at holde projektet på sporet og håndtere risici. Hvordan kan man sikre, at hver iteration er stabil og testet?
 > 
-
+# 1
+- At planen bliver antaget kan forudsige hvordan projektet forløber, og derfor ikke revurder projektet løbende (vandfaldsmentalitet).
+- Når projektet skrider, risikere man at fange det forsent hvis man stoler blindt på en tidlig tidsplan. Ved korteintervaller fanges forsinkelser og usete udfordringer tidligt. Projektet bliver i stand til at reagere (agilt).
+# 
