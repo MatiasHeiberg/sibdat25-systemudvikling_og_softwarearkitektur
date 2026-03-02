@@ -21,4 +21,9 @@ sortKey: 0.47259
 # 1
 - At planen bliver antaget kan forudsige hvordan projektet forløber, og derfor ikke revurder projektet løbende (vandfaldsmentalitet).
 - Når projektet skrider, risikere man at fange det forsent hvis man stoler blindt på en tidlig tidsplan. Ved korteintervaller fanges forsinkelser og usete udfordringer tidligt. Projektet bliver i stand til at reagere (agilt).
-# 
+# 2
+- Ændringer i krav øger kvaliteten fordi ændringer ofte bevæger sig fra abstrakt til mere specifikt. Så når et krav ændrer sig gør det os klogere på hvad der leverer værdi til kunden.
+- Ændringer i krav kan spare os penge hvis det sker tidligt nok i processen. 
+- Når kravene bliver mere specifikke bliver projektet mere actionable fordi udvikleren skal arbejde mindre med antagelser og tvivl.
+# 3 
+- 
