@@ -16,8 +16,8 @@ sortKey: 0.394
 > [!info]- Principles behind the Agile Manifesto
 > 
 > 
-> 1. We follow these principles:
-> Our highest priority is to satisfy the customer
+> We follow these principles:
+> 1. Our highest priority is to satisfy the customer
 > through early and continuous delivery
 > of valuable software.
 > 
