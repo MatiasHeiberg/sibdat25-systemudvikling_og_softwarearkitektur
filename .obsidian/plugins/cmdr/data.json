@@ -16,6 +16,12 @@
       "icon": "lucide-quote",
       "name": "Citations: Insert Markdown citation",
       "mode": "any"
+    },
+    {
+      "id": "templater-obsidian:docs/templates/update_draft.md",
+      "icon": "lucide-hammer",
+      "name": "Templater: Insert docs/templates/update_draft",
+      "mode": "any"
     }
   ],
   "rightRibbon": [],
