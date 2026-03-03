@@ -22,7 +22,6 @@ views:
     order:
       - file.name
       - sortKey
-      - section
     sort:
       - property: sortKey
         direction: ASC

@@ -27,3 +27,5 @@ sortKey: 0.47259
 - Når kravene bliver mere specifikke bliver projektet mere actionable fordi udvikleren skal arbejde mindre med antagelser og tvivl.
 # 3 
 - 
+# 4
+- Vores detaljeorientering gør at snakket ofte løber løbsk og fokusset ryger 
