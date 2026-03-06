@@ -1,9 +1,20 @@
-﻿namespace App;
+﻿using OrderSystem;
+
+namespace OrderSystem;
 
 public class Program
 {
     public static void Main(string[] args)
     {
-        Console.WriteLine("App er startet.");
+        new Program().Run();
+    }
+
+    public void Run()
+    {
+        var OrderService = new OrderService();
+        OrderService.CreateOrder("Tastetur", 500, 2);
+        OrderService.CreateOrder("Mus", 200, 3);
+        OrderService.CreateOrder("Gratis vare", 0, 1);
+        OrderService.CreateOrder("Skærm", 1500, 1);
     }
 }
