@@ -16,6 +16,7 @@ namespace day6
             new Transport(new ElectricEngine(), false);
             new Transport(new ElectricEngine(), true);
             new Transport(new HybridEngine(), true);
+
         }
     }
 }

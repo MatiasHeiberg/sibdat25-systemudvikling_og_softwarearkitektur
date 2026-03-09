@@ -16,9 +16,9 @@ namespace day6.excersise3
             HasAutopilot = hasAutopilot;
         }
 
-        public void Describe()
+        public string Describe()
         {
-            Console.WriteLine($"Motortype: {Engine}");
+            return ($"{(HasAutopilot == true ? "Autopilot " : "")}{Engine.Type} Car");
         }
     }
 }
