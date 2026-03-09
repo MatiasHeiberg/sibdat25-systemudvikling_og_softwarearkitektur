@@ -1,4 +1,10 @@
 <Solution>
-  <Project Path="src/OrderSystem.csproj" />
-  <Project Path="tests/OrderSystemTest.csproj" />
+  <Folder Name="/1./">
+    <Project Path="src/day5/day5.csproj" />
+    <Project Path="tests/day5/day5Tests.csproj" />
+  </Folder>
+  <Folder Name="/2./">
+    <Project Path="src/day6/day6.csproj" Id="eb674bd7-6a3a-4543-905d-5def203094fe" />
+    <Project Path="tests/day6/day6Tests/day6Tests.csproj" Id="a6e50308-ba20-4bb6-a824-254a71666d60" />
+  </Folder>
 </Solution>

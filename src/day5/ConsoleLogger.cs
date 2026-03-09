@@ -7,7 +7,7 @@ using System.Xml.Serialization;
 
 namespace OrderSystem
 {
-    public class ConsoleLogger
+    public class ConsoleLogger : ILogger
     {
         public void Log(string message)
         {

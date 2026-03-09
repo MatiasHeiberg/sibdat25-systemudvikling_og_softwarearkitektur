@@ -6,11 +6,8 @@ using System.Threading.Tasks;
 
 namespace OrderSystem
 {
-    public class PriceCalculator
+    public interface IPriceCalculator
     {
-        public decimal CalculatePrice(int quantity, decimal price)
-        {
-            return quantity * price;
-        }
+        public decimal CalculateTotal(decimal price, int quantity);
     }
 }

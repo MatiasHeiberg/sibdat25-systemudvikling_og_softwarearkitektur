@@ -1,0 +1,810 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hotel Billing System — Refaktorér til SOLID</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #f0f2f5;
+      color: #1a1a1a;
+      line-height: 1.65;
+      font-size: 15px;
+    }
+    header {
+      background: #1e3a5f;
+      color: white;
+      padding: 2rem 3rem 1.75rem;
+      border-bottom: 4px solid #e8a000;
+    }
+    .header-badge {
+      display: inline-block;
+      background: #e8a000;
+      color: #1a1000;
+      font-weight: 700;
+      font-size: 0.72rem;
+      padding: 0.18rem 0.65rem;
+      border-radius: 3px;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 0.6rem;
+    }
+    header h1 { font-size: 1.75rem; font-weight: 700; line-height: 1.2; }
+    header .subtitle { margin-top: 0.35rem; opacity: 0.75; font-size: 0.95rem; }
+    main { max-width: 1000px; margin: 2rem auto; padding: 0 1.5rem 3rem; }
+    .section {
+      background: white;
+      border-radius: 8px;
+      padding: 1.6rem 2rem;
+      margin-bottom: 1.25rem;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.07);
+    }
+    .section h2 {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: #1e3a5f;
+      border-bottom: 2px solid #e8eef6;
+      padding-bottom: 0.5rem;
+      margin-bottom: 0.9rem;
+    }
+    .section h3 { font-size: 0.95rem; font-weight: 700; color: #333; margin: 1.1rem 0 0.4rem; }
+    .section h3:first-child { margin-top: 0; }
+    .section p { margin-bottom: 0.7rem; }
+    .section p:last-child { margin-bottom: 0; }
+    .section ul, .section ol { padding-left: 1.4rem; margin: 0.5rem 0 0.7rem; }
+    .section li { margin-bottom: 0.35rem; }
+    code {
+      font-family: 'Cascadia Code', 'Consolas', monospace;
+      background: #f0f0f0;
+      padding: 0.15em 0.4em;
+      border-radius: 3px;
+      font-size: 0.87em;
+    }
+    .badge-header {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin: 1.2rem 0 0.45rem;
+    }
+    .badge-header:first-child { margin-top: 0; }
+    .badge-header h3 { margin: 0; }
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 30px; height: 30px;
+      background: #1e3a5f;
+      color: white;
+      border-radius: 50%;
+      font-weight: 700;
+      font-size: 0.95rem;
+    }
+    .accept-list { list-style: none; padding: 0; counter-reset: ac; }
+    .accept-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.65rem;
+      padding: 0.45rem 0;
+      border-bottom: 1px solid #f0f0f0;
+    }
+    .accept-list li:last-child { border-bottom: none; }
+    .accept-list li::before {
+      content: counter(ac);
+      counter-increment: ac;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 22px; height: 22px;
+      background: #e8f0ff;
+      color: #1e3a5f;
+      border-radius: 50%;
+      font-size: 0.75rem;
+      font-weight: 700;
+      margin-top: 0.1rem;
+      flex-shrink: 0;
+    }
+    .lsp-warn {
+      display: inline-block;
+      background: #fff3cd;
+      border: 1px solid #ffc107;
+      border-radius: 4px;
+      padding: 0.1em 0.5em;
+      font-size: 0.82em;
+      font-weight: 600;
+      color: #856404;
+      margin-left: 0.25rem;
+      vertical-align: middle;
+    }
+    .diagram-section {
+      background: white;
+      border-radius: 8px;
+      padding: 1.25rem 1.5rem 1.5rem;
+      margin-bottom: 1.25rem;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.07);
+      overflow-x: auto;
+    }
+    .diagram-label {
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: #888;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      margin-bottom: 0.3rem;
+    }
+    .diagram-hint {
+      font-size: 0.78rem;
+      color: #aaa;
+      font-style: italic;
+      margin-bottom: 0.85rem;
+    }
+    svg.uml { display: block; overflow: visible; }
+    .cls-group { cursor: default; }
+    .cls-group[data-pseudo] { cursor: pointer; }
+    .cls-group[data-pseudo]:hover .cls-header { filter: brightness(1.15); }
+    .cls-group[data-pseudo]:hover .cls-border { stroke-width: 2.5; }
+    #tooltip {
+      position: fixed;
+      display: none;
+      z-index: 9999;
+      background: #16213e;
+      color: #d8e8ff;
+      border: 1px solid #3a5a8a;
+      border-radius: 8px;
+      padding: 0.9rem 1.1rem;
+      max-width: 440px;
+      min-width: 240px;
+      pointer-events: none;
+      box-shadow: 0 6px 24px rgba(0,0,0,0.5);
+    }
+    #tooltip-label {
+      font-size: 0.7rem;
+      color: #6a8ab8;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 0.5rem;
+    }
+    #tooltip-code {
+      font-family: 'Cascadia Code', 'Consolas', monospace;
+      font-size: 0.8rem;
+      line-height: 1.6;
+      white-space: pre;
+      margin: 0;
+      color: #c8e0ff;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="header-badge">Dag 02 — Softwarearktitektur</div>
+  <h1>Hotel Billing System — Refaktorér til SOLID</h1>
+  <div class="subtitle">Du har fået kildekoden til et virkende system. Din opgave er at refaktorere det.</div>
+</header>
+
+<main>
+
+  <section class="section">
+    <h2>Systemet</h2>
+    <p>
+      Du har fået kildekoden til et hotel checkout-system. Systemet virker,
+      men koden er skrevet uden hensyn til SOLID-principperne.
+    </p>
+    <p>Systemet håndterer checkout for fire gæstetyper:</p>
+    <ul>
+      <li><strong>Standard</strong> — 800 kr. pr. nat, loyalitetspoint: 1% af subtotal, ingen goder</li>
+      <li><strong>VIP</strong> — 1500 kr. pr. nat, loyalitetspoint: 5% af subtotal, gratis morgenmad og upgrade</li>
+      <li><strong>Corporate</strong> — 1200 kr. pr. nat, ingen loyalitetspoint, gratis morgenmad</li>
+      <li><strong>Student</strong> — timepris, ingen loyalitetspoint, ingen goder</li>
+    </ul>
+    <p>
+      Der beregnes <strong>25% moms</strong> oven på værelsesprisen.
+      Systemet printer en kvittering til konsollen.
+    </p>
+  </section>
+
+  <div class="diagram-section">
+    <div class="diagram-label">Klassediagram — Nuværende kode (før refaktorering)</div>
+    <div class="diagram-hint">Hold musen over en klasse for at se pseudo kode</div>
+    <svg id="diagram-1" class="uml"></svg>
+  </div>
+
+  <section class="section">
+    <h2>Din opgave</h2>
+    <p>
+      Refaktorér koden så den overholder alle 5 SOLID-principper —
+      i samme stil som du har set i øvelserne 02_04_A til 02_04_F.
+    </p>
+
+    <div class="badge-header">
+      <span class="badge">S</span>
+      <h3>Single Responsibility Principle</h3>
+    </div>
+    <p>
+      <code>HotelBillingSystem.ProcessCheckout</code> gør for mange ting på én gang:
+      beregner pris, beregner moms og printer kvittering.
+    </p>
+    <p>
+      <strong>Opgave:</strong> Udpak logikken i separate klasser.
+      <code>RoomCostCalculator</code> beregner værelsesprisen ud fra gæstetype og antal nætter.
+      <code>MomsCalculator</code> beregner moms.
+      <code>ReceiptPrinter</code> printer kvitteringen.
+    </p>
+
+    <div class="badge-header">
+      <span class="badge">O</span>
+      <h3>Open/Closed Principle</h3>
+    </div>
+    <p>
+      <code>ProcessCheckout</code> indeholder en <code>if-else</code>-kæde der tjekker gæstetypen.
+      Skal der tilføjes en ny gæstetype, skal <code>ProcessCheckout</code> ændres.
+    </p>
+    <p>
+      <strong>Opgave:</strong> Erstat <code>if-else</code>-kæden med en abstrakt
+      <code>GuestBase</code>-klasse og polymorphisme, så <code>ProcessCheckout</code>
+      ikke skal ændres ved nye gæstetyper.
+    </p>
+
+    <div class="badge-header">
+      <span class="badge">L</span>
+      <h3>Liskov Substitution Principle</h3>
+    </div>
+    <p>
+      <code>StudentGuest</code> implementerer <code>IGuest</code>, men kaster en
+      <code>NotSupportedException</code> når <code>ProcessCheckout</code> kaldes.
+      Det bryder LSP — en subtype skal altid kunne erstatte sin basistype.
+    </p>
+    <p>
+      <strong>Opgave:</strong> Fix <code>StudentGuest</code> så den returnerer en
+      gyldig pris (f.eks. 600 kr. pr. nat) i stedet for at kaste en exception.
+    </p>
+
+    <div class="badge-header">
+      <span class="badge">I</span>
+      <h3>Interface Segregation Principle</h3>
+    </div>
+    <p>
+      <code>IGuest</code> har metoderne <code>CalculateLoyaltyPoints</code> og
+      <code>GetBenefits</code>, selvom <code>StandardGuest</code> og <code>StudentGuest</code>
+      ikke har brug for dem — de er tvunget til at implementere noget de ikke bruger.
+    </p>
+    <p>
+      <strong>Opgave:</strong> Opdel <code>IGuest</code> i tre mindre interfaces.
+      <code>IChargeable</code> har <code>Name</code> og <code>CalculateRoomRate()</code>.
+      <code>ILoyaltyEligible</code> har <code>CalculateLoyaltyPoints(subtotal)</code>.
+      <code>IBenefitsEligible</code> har <code>GetBenefits()</code>.
+      Lad hver gæstetype kun implementere de interfaces der er relevante.
+    </p>
+
+    <div class="badge-header">
+      <span class="badge">D</span>
+      <h3>Dependency Inversion Principle</h3>
+    </div>
+    <p>
+      <code>HotelBillingSystem</code> opretter selv <code>MomsCalculator</code> og
+      <code>ReceiptPrinter</code> direkte. Det gør det umuligt at udskifte
+      implementeringerne og svært at unit-teste.
+    </p>
+    <p>
+      <strong>Opgave:</strong> Indfør interfaces (<code>IMomsCalculator</code> og
+      <code>IReceiptPrinter</code>) og injicér dem via constructor injection,
+      ligesom <code>PayrollSystem</code> i øvelse 02_04_F.
+    </p>
+  </section>
+
+  <section class="section">
+    <h2>Acceptkriterier</h2>
+    <ol class="accept-list">
+      <li><code>HotelBillingSystem</code> har ét ansvar og indeholder ikke beregnings- eller print-logik.</li>
+      <li>Ny gæstetype kan tilføjes uden at ændre <code>HotelBillingSystem</code>.</li>
+      <li>Alle gæstetyper inkl. <code>StudentGuest</code> kan bruges uden exceptions.</li>
+      <li>Ingen gæsteklasse implementerer interfaces den ikke har brug for.</li>
+      <li><code>HotelBillingSystem</code> afhænger kun af interfaces — ikke af konkrete klasser.</li>
+      <li>Systemet kan unit-testes med fake-implementeringer af <code>IMomsCalculator</code> og <code>IReceiptPrinter</code>.</li>
+    </ol>
+  </section>
+
+</main>
+
+<div id="tooltip">
+  <div id="tooltip-label">Pseudo kode</div>
+  <pre id="tooltip-code"></pre>
+</div>
+
+<script>
+const DIAGRAMS = [
+  {
+    id: "diagram-1",
+    classes: [
+      {
+        name: "HotelBillingSystem",
+        stereotype: null,
+        fields: [],
+        methods: [
+          "+ ProcessCheckout(guest, nights)"
+        ],
+        col: 0, row: 0,
+        pseudoCode:
+`CLASS HotelBillingSystem
+
+  METHOD ProcessCheckout(guest: IGuest, nights: int)
+
+    // Beregn pris baseret på gæstetype
+    IF guest == "Standard"
+      rate = 800
+    ELSE IF guest == "VIP"
+      rate = 1500
+    ELSE IF guest == "Corporate"
+      rate = 1200
+    ELSE IF guest == "Student"
+      THROW NotSupportedException  ← LSP-brud!
+    END IF
+
+    subtotal = rate * nights
+    moms     = subtotal * 0.25    ← S-brud: MomsCalculator?
+    total    = subtotal + moms
+
+    // Print kvittering
+    PRINT "Gæst: " + guest.Name  ← S-brud: ReceiptPrinter?
+    PRINT "Subtotal: " + subtotal
+    PRINT "Moms: " + moms
+    PRINT "Total: " + total
+
+    // Loyalitetspoint og goder
+    points   = guest.CalculateLoyaltyPoints(subtotal)
+    benefits = guest.GetBenefits()   ← I-brud: Standard/Student
+    IF points > 0 THEN PRINT "Point: " + points
+    IF benefits.Any() THEN PRINT benefits`
+      },
+
+      {
+        name: "IGuest",
+        stereotype: "«interface»",
+        fields: [],
+        methods: [
+          "+ Name: string",
+          "+ CalculateRoomRate(): decimal",
+          "+ CalculateLoyaltyPoints(s): decimal",
+          "+ GetBenefits(): List<string>"
+        ],
+        col: 2, row: 0,
+        pseudoCode:
+`INTERFACE IGuest
+
+  PROPERTY Name: string
+
+  METHOD CalculateRoomRate(): decimal
+    // Returner pris pr. nat
+
+  METHOD CalculateLoyaltyPoints(subtotal: decimal): decimal
+    // Returner optjente loyalitetspoint
+    // Problem: Standard og Student har ikke point!
+    //          → ISP-brud
+
+  METHOD GetBenefits(): List<string>
+    // Returner liste af goder
+    // Problem: Standard og Student har ingen goder!
+    //          → ISP-brud`
+      },
+
+      {
+        name: "StandardGuest",
+        stereotype: null,
+        fields: [],
+        methods: [
+          "+ CalculateRoomRate(): 800",
+          "+ CalculateLoyaltyPoints(): 1%",
+          "+ GetBenefits(): []"
+        ],
+        col: 1, row: 1,
+        pseudoCode:
+`CLASS StandardGuest IMPLEMENTS IGuest
+
+  PROPERTY Name: string
+
+  METHOD CalculateRoomRate(): decimal
+    RETURN 800
+
+  METHOD CalculateLoyaltyPoints(subtotal): decimal
+    RETURN subtotal * 0.01   // 1%
+
+  METHOD GetBenefits(): List<string>
+    RETURN []   // Ingen goder
+    // GetBenefits er tvungen pga. IGuest,
+    // selvom Standard ikke har goder → ISP-brud`
+      },
+
+      {
+        name: "VIPGuest",
+        stereotype: null,
+        fields: [],
+        methods: [
+          "+ CalculateRoomRate(): 1500",
+          "+ CalculateLoyaltyPoints(): 5%",
+          "+ GetBenefits(): [morgenmad..]"
+        ],
+        col: 2, row: 1,
+        pseudoCode:
+`CLASS VIPGuest IMPLEMENTS IGuest
+
+  PROPERTY Name: string
+
+  METHOD CalculateRoomRate(): decimal
+    RETURN 1500
+
+  METHOD CalculateLoyaltyPoints(subtotal): decimal
+    RETURN subtotal * 0.05   // 5%
+
+  METHOD GetBenefits(): List<string>
+    RETURN ["Gratis morgenmad", "Room Upgrade"]`
+      },
+
+      {
+        name: "CorporateGuest",
+        stereotype: null,
+        fields: [],
+        methods: [
+          "+ CalculateRoomRate(): 1200",
+          "+ CalculateLoyaltyPoints(): 0",
+          "+ GetBenefits(): [morgenmad]"
+        ],
+        col: 3, row: 1,
+        pseudoCode:
+`CLASS CorporateGuest IMPLEMENTS IGuest
+
+  PROPERTY Name: string
+
+  METHOD CalculateRoomRate(): decimal
+    RETURN 1200
+
+  METHOD CalculateLoyaltyPoints(subtotal): decimal
+    RETURN 0   // Ingen loyalitetspoint
+
+  METHOD GetBenefits(): List<string>
+    RETURN ["Gratis morgenmad"]`
+      },
+
+      {
+        name: "StudentGuest",
+        stereotype: null,
+        fields: [],
+        methods: [
+          "+ CalculateRoomRate(): FEJL!",
+          "+ CalculateLoyaltyPoints(): FEJL!",
+          "+ GetBenefits(): FEJL!"
+        ],
+        col: 4, row: 1,
+        pseudoCode:
+`CLASS StudentGuest IMPLEMENTS IGuest
+
+  PROPERTY Name: string
+
+  METHOD CalculateRoomRate(): decimal
+    THROW NotSupportedException
+    // ← LSP-BRUD! Subtype må ikke kaste
+    //   exceptions som basistypen ikke kaster.
+    //   ProcessCheckout kan ikke bruge StudentGuest
+    //   uden at crashe!
+
+  METHOD CalculateLoyaltyPoints(subtotal): decimal
+    THROW NotSupportedException   // ← LSP-brud
+
+  METHOD GetBenefits(): List<string>
+    THROW NotSupportedException   // ← LSP-brud`
+      }
+    ],
+    relationships: [
+      { from: "HotelBillingSystem", to: "IGuest",        type: "uses"       },
+      { from: "StandardGuest",      to: "IGuest",        type: "implements" },
+      { from: "VIPGuest",           to: "IGuest",        type: "implements" },
+      { from: "CorporateGuest",     to: "IGuest",        type: "implements" },
+      { from: "StudentGuest",       to: "IGuest",        type: "implements" }
+    ]
+  }
+];
+
+/* ================================================================
+   UML RENDERER
+   ================================================================ */
+
+const CFG = {
+  boxW:    210,
+  colGap:  45,
+  rowGap:  48,
+  pad:     22,
+  lineH:   19,
+  secPad:  8,
+  hdrMin:  40,
+  stereoH: 16,
+  nameH:   20,
+};
+
+const REL_LABELS = {
+  implements:
+`Realisering / implementering
+Stiplet linje · hul hvid trekant
+
+Klassen opfylder interfacets kontrakt.
+Pilen peger altid mod interfacet.
+Metoderne gentages ikke i subklassen.`,
+
+  inherits:
+`Nedarvning (arv)
+Solid linje · hul hvid trekant
+
+Subklassen arver felter og metoder
+fra superklassen.
+Pilen peger altid mod superklassen.`,
+
+  uses:
+`Dependency (afhængighed)
+Stiplet linje · åben pil
+
+Funktionalitet i én klasse afhænger
+af den anden klasse.
+Pilen peger mod den klasse
+vi er afhængige af.`,
+
+  has:
+`Composition (ejerskab)
+Solid linje · fyldt diamant
+
+Forældre-barn relation: barnet kan ikke
+eksistere uden forælderen.
+Forælderen opretter selv barnet (new).
+Diamanten peger mod forælderen (ejeren).`,
+
+  associates:
+`Aggregation
+Solid linje · hul diamant
+
+Begge klasser kan eksistere uafhængigt.
+Klassen modtager objektet udefra (injiceres).
+Diamanten peger mod den klasse
+der bruger den anden.`,
+};
+
+const NS = "http://www.w3.org/2000/svg";
+function el(tag, attrs, children) {
+  const e = document.createElementNS(NS, tag);
+  for (const [k, v] of Object.entries(attrs)) e.setAttribute(k, v);
+  if (children) children.forEach(c => e.appendChild(c));
+  return e;
+}
+function txt(s, attrs) {
+  const e = document.createElementNS(NS, "text");
+  e.setAttribute("font-family", "inherit");
+  for (const [k, v] of Object.entries(attrs)) e.setAttribute(k, v);
+  e.textContent = s;
+  return e;
+}
+
+function boxHeight(cls) {
+  const hH = Math.max(CFG.hdrMin,
+    (cls.stereotype ? CFG.stereoH : 0) + CFG.nameH + CFG.secPad * 2);
+  const fH = Math.max(CFG.secPad * 2,
+    cls.fields.length  * CFG.lineH + CFG.secPad * 2);
+  const mH = Math.max(CFG.secPad * 2,
+    cls.methods.length * CFG.lineH + CFG.secPad * 2);
+  return hH + fH + mH;
+}
+
+function layout(classes) {
+  const rH = {}, cW = {};
+  for (const c of classes) {
+    rH[c.row] = Math.max(rH[c.row] || 0, boxHeight(c));
+    cW[c.col] = Math.max(cW[c.col] || 0, CFG.boxW);
+  }
+  const maxC = Math.max(...classes.map(c => c.col));
+  const maxR = Math.max(...classes.map(c => c.row));
+  const cx = {}, ry = {};
+  let x = CFG.pad;
+  for (let c = 0; c <= maxC; c++) { cx[c] = x; x += (cW[c] || CFG.boxW) + CFG.colGap; }
+  let y = CFG.pad;
+  for (let r = 0; r <= maxR; r++) { ry[r] = y; y += (rH[r] || 80) + CFG.rowGap; }
+  const pos = {};
+  for (const c of classes)
+    pos[c.name] = { x: cx[c.col], y: ry[c.row], w: CFG.boxW, h: boxHeight(c) };
+  return { pos, W: x - CFG.colGap + CFG.pad, H: y - CFG.rowGap + CFG.pad };
+}
+
+function edge(box, toward) {
+  const cx = box.x + box.w / 2, cy = box.y + box.h / 2;
+  const tx = toward.x + toward.w / 2, ty = toward.y + toward.h / 2;
+  const dx = tx - cx, dy = ty - cy;
+  if (Math.abs(dy) / box.h >= Math.abs(dx) / box.w)
+    return dy >= 0 ? { x: cx, y: box.y + box.h } : { x: cx, y: box.y };
+  else
+    return dx >= 0 ? { x: box.x + box.w, y: cy } : { x: box.x, y: cy };
+}
+
+function makeMarker(id, type) {
+  const m = el("marker", {
+    id, markerWidth: "13", markerHeight: "10",
+    refX: "12", refY: "5", orient: "auto", markerUnits: "userSpaceOnUse"
+  });
+  if (type === "inherits" || type === "implements")
+    m.appendChild(el("polygon", { points: "1,1 12,5 1,9", fill: "white", stroke: "#4a6a90", "stroke-width": "1.5" }));
+  else if (type === "has")
+    m.appendChild(el("polygon", { points: "0,5 5,1 12,5 5,9", fill: "#4a6a90", stroke: "#4a6a90", "stroke-width": "1" }));
+  else
+    m.appendChild(el("polyline", { points: "1,1 11,5 1,9", fill: "none", stroke: "#4a6a90", "stroke-width": "1.5" }));
+  return m;
+}
+
+function renderRelation(rel, pos, defs) {
+  const fb = pos[rel.from], tb = pos[rel.to];
+  if (!fb || !tb) return null;
+  const f = edge(fb, tb), t = edge(tb, fb);
+  const markId = `m-${rel.type}`;
+  if (!defs.querySelector(`#${markId}`)) defs.appendChild(makeMarker(markId, rel.type));
+  const isDash = rel.type === "implements" || rel.type === "uses";
+
+  const g = el("g", { "class": "rel-group", style: "cursor:help" });
+
+  // Synlig pil
+  g.appendChild(el("line", {
+    x1: f.x, y1: f.y, x2: t.x, y2: t.y,
+    stroke: "#4a6a90", "stroke-width": "1.5",
+    "marker-end": `url(#${markId})`,
+    "pointer-events": "none",
+    ...(isDash ? { "stroke-dasharray": "6,4" } : {})
+  }));
+
+  // Usynlig bred hit-area så pilen er nem at ramme
+  g.appendChild(el("line", {
+    x1: f.x, y1: f.y, x2: t.x, y2: t.y,
+    stroke: "black", "stroke-width": "16",
+    opacity: "0", "pointer-events": "stroke"
+  }));
+
+  // Tooltip-indhold
+  const content = `${rel.from}  →  ${rel.to}\n\n${REL_LABELS[rel.type] || rel.type}`;
+  g.addEventListener("mouseenter", e => {
+    tooltipLabel.textContent = "Notation";
+    tooltipCode.textContent  = content;
+    tooltip.style.display    = "block";
+    placeTooltip(e);
+  });
+  g.addEventListener("mousemove",  placeTooltip);
+  g.addEventListener("mouseleave", () => { tooltip.style.display = "none"; });
+
+  return g;
+}
+
+function renderClass(cls, box, defs) {
+  const { x, y, w } = box;
+  const h = boxHeight(cls);
+  const isIface = cls.stereotype === "«interface»";
+  const isAbstr = cls.stereotype === "«abstract»";
+  const hdrFill = isIface ? "#1b6b55" : isAbstr ? "#5a3a7a" : "#1e3a5f";
+  const border  = isIface ? "#1b6b55" : isAbstr ? "#5a3a7a" : "#2a5080";
+  const strokeD = (isIface || isAbstr) ? "6,3" : null;
+
+  const clipId = `cp-${cls.name.replace(/\W/g, "")}`;
+  defs.appendChild(el("clipPath", { id: clipId }, [
+    el("rect", { x: x + 2, y, width: w - 4, height: h })
+  ]));
+
+  const hH = Math.max(CFG.hdrMin,
+    (cls.stereotype ? CFG.stereoH : 0) + CFG.nameH + CFG.secPad * 2);
+  const fH = Math.max(CFG.secPad * 2,
+    cls.fields.length  * CFG.lineH + CFG.secPad * 2);
+
+  const g = el("g", {
+    "class": "cls-group",
+    ...(cls.pseudoCode ? { "data-pseudo": "1" } : {})
+  });
+
+  g.appendChild(el("rect", {
+    "class": "cls-border",
+    x, y, width: w, height: h,
+    fill: "white", stroke: border, "stroke-width": "1.5", rx: "4",
+    ...(strokeD ? { "stroke-dasharray": strokeD } : {})
+  }));
+  g.appendChild(el("rect", {
+    "class": "cls-header",
+    x, y, width: w, height: hH, fill: hdrFill, rx: "4"
+  }));
+  g.appendChild(el("rect", { x, y: y + hH - 4, width: w, height: 4, fill: hdrFill }));
+
+  let yOff = y + CFG.secPad;
+  if (cls.stereotype) {
+    g.appendChild(txt(cls.stereotype, {
+      x: x + w / 2, y: yOff + 12, "text-anchor": "middle",
+      fill: "rgba(255,255,255,0.7)", "font-size": "10.5",
+      "font-style": "italic", "clip-path": `url(#${clipId})`
+    }));
+    yOff += CFG.stereoH;
+  }
+  g.appendChild(txt(cls.name, {
+    x: x + w / 2, y: yOff + 15, "text-anchor": "middle",
+    fill: "white", "font-size": "13", "font-weight": "bold",
+    ...(isAbstr ? { "font-style": "italic" } : {}),
+    "clip-path": `url(#${clipId})`
+  }));
+
+  g.appendChild(el("line", {
+    x1: x, y1: y + hH, x2: x + w, y2: y + hH,
+    stroke: border, "stroke-width": "1"
+  }));
+
+  let fY = y + hH + CFG.secPad;
+  for (const f of cls.fields) {
+    g.appendChild(txt(f, {
+      x: x + 8, y: fY + 13, fill: "#2a2a2a", "font-size": "10.5",
+      "font-family": "Cascadia Code,Consolas,monospace",
+      "clip-path": `url(#${clipId})`
+    }));
+    fY += CFG.lineH;
+  }
+
+  g.appendChild(el("line", {
+    x1: x, y1: y + hH + fH, x2: x + w, y2: y + hH + fH,
+    stroke: border, "stroke-width": "1", "stroke-opacity": "0.4"
+  }));
+
+  let mY = y + hH + fH + CFG.secPad;
+  for (const m of cls.methods) {
+    g.appendChild(txt(m, {
+      x: x + 8, y: mY + 13, fill: "#2a2a2a", "font-size": "10.5",
+      "font-family": "Cascadia Code,Consolas,monospace",
+      "clip-path": `url(#${clipId})`
+    }));
+    mY += CFG.lineH;
+  }
+  return g;
+}
+
+function renderDiagram(cfg) {
+  const svg = document.getElementById(cfg.id);
+  if (!svg) return;
+  svg.innerHTML = "";
+  const { pos, W, H } = layout(cfg.classes);
+  svg.setAttribute("viewBox", `0 0 ${W} ${H}`);
+  svg.setAttribute("width", W);
+  svg.setAttribute("height", H);
+  svg.style.maxWidth = "100%";
+  svg.style.height = "auto";
+
+  const defs = el("defs", {});
+  svg.appendChild(defs);
+
+  for (const rel of cfg.relationships) { const rg = renderRelation(rel, pos, defs); if (rg) svg.appendChild(rg); }
+
+  for (const cls of cfg.classes) {
+    const g = renderClass(cls, pos[cls.name], defs);
+    svg.appendChild(g);
+    if (cls.pseudoCode) {
+      g.addEventListener("mouseenter", e => {
+        tooltipLabel.textContent = "Pseudo kode";
+        tooltipCode.textContent  = cls.pseudoCode;
+        tooltip.style.display    = "block";
+        placeTooltip(e);
+      });
+      g.addEventListener("mousemove", placeTooltip);
+      g.addEventListener("mouseleave", () => { tooltip.style.display = "none"; });
+    }
+  }
+}
+
+const tooltip     = document.getElementById("tooltip");
+const tooltipLabel = document.getElementById("tooltip-label");
+const tooltipCode  = document.getElementById("tooltip-code");
+
+function placeTooltip(e) {
+  const W  = tooltip.offsetWidth  || 340;
+  const H  = tooltip.offsetHeight || 120;
+  const vw = window.innerWidth, vh = window.innerHeight;
+  let lx = e.clientX + 18, ly = e.clientY + 14;
+  if (lx + W > vw - 8) lx = e.clientX - W - 10;
+  if (ly + H > vh - 8) ly = e.clientY - H - 10;
+  tooltip.style.left = `${lx}px`;
+  tooltip.style.top  = `${ly}px`;
+}
+
+for (const d of DIAGRAMS) renderDiagram(d);
+</script>
+</body>
+</html>

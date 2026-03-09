@@ -11,7 +11,10 @@ public class Program
 
     public void Run()
     {
-        var OrderService = new OrderService();
+        var OrderService = new OrderService(
+            new PriceCalculator(), 
+            new ConsoleLogger());
+
         OrderService.CreateOrder("Tastetur", 500, 2);
         OrderService.CreateOrder("Mus", 200, 3);
         OrderService.CreateOrder("Gratis vare", 0, 1);

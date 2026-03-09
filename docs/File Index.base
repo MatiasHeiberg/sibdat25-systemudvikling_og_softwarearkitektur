@@ -28,8 +28,7 @@ views:
       - property: file.name
         direction: DESC
     summaries: {}
-    columnSize:
-      file.name: 107
+    columnSize: {}
   - type: table
     name: Daily Log
     filters:

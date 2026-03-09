@@ -8,12 +8,21 @@ namespace OrderSystem
 {
     public class OrderService
     {
+        private readonly IPriceCalculator _calculator;
+        private readonly ILogger _logger;
+
+        public OrderService(IPriceCalculator calculator, ILogger logger)
+        {
+            this._calculator = calculator;
+            this._logger = logger;
+        }
         public Order CreateOrder(string productName, decimal price, int quantity)
         {
-            decimal totalPrice = new PriceCalculator().CalculatePrice(quantity, price);
+            var totalPrice = _calculator.CalculateTotal(price, quantity);
             Product product = new Product(productName, price);
             Order order = new Order(product, quantity, totalPrice);
-            new ConsoleLogger().Log($"New order: {quantity} {productName} at a total price of {totalPrice}");
+
+            _logger.Log($"New order: {quantity} {productName} at a total price of {totalPrice}");
             return order;
         }
     }
