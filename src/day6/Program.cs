@@ -17,6 +17,13 @@ namespace day6
             new Transport(new ElectricEngine(), true);
             new Transport(new HybridEngine(), true);
 
+            // Opgave 2.4
+            var payroll = new PayrollSystem();
+
+            payroll.ProcessPayroll("John", "FullTime", 15_000m, 37);
+            payroll.ProcessPayroll("Jessi", "PartTime", 15_000m, 37);
+            payroll.ProcessPayroll("Claud", "Freelancer", 15_000m, 18);
+            payroll.ProcessPayroll("Messi", "FullTime", 15_000m, 45);
         }
     }
 }
