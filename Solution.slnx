@@ -1,10 +1,14 @@
 <Solution>
-  <Folder Name="/1./">
+  <Folder Name="/day5/">
     <Project Path="src/day5/day5.csproj" />
     <Project Path="tests/day5/day5Tests.csproj" />
   </Folder>
-  <Folder Name="/2./">
+  <Folder Name="/day6/">
     <Project Path="src/day6/day6.csproj" Id="eb674bd7-6a3a-4543-905d-5def203094fe" />
     <Project Path="tests/day6/day6Tests/day6Tests.csproj" Id="a6e50308-ba20-4bb6-a824-254a71666d60" />
+  </Folder>
+  <Folder Name="/day7/">
+    <Project Path="src/day7/day7.csproj" Id="62fbf1af-98d7-472c-9e75-253ef62a82f9" />
+    <Project Path="tests/day7Tests/day7Tests.csproj" Id="830ef72e-1b7c-4b73-9cf6-9f835bf84e86" />
   </Folder>
 </Solution>
